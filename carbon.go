@@ -56,6 +56,14 @@ func PreviousDay(t time.Time) time.Time {
 	return t.AddDate(0, 0, -1)
 }
 
+func NextWeek(t time.Time) time.Time {
+	return t.AddDate(0, 0, 7)
+}
+
+func PreviousWeek(t time.Time) time.Time {
+	return t.AddDate(0, 0, -7)
+}
+
 func NextMonthOfYear(t time.Time, m time.Month) time.Time {
 	diff := m - t.Month()
 	if diff < 0 {

@@ -5,6 +5,7 @@ import (
 	"github.com/go-martini/martini"
 	"log"
 	"net/http"
+	"sort"
 )
 
 func main() {
@@ -24,6 +25,11 @@ func render(w http.ResponseWriter, req *http.Request) {
 		PresidentsDay,
 		MemorialDay,
 		IndependenceDay,
+		LaborDay,
+		ColumbusDay,
+		VeteransDay,
+		Thanksgiving,
+		ChristmasDay,
 	}
 
 	var holidays []Holiday
@@ -31,7 +37,7 @@ func render(w http.ResponseWriter, req *http.Request) {
 	for _, generator := range generators {
 		holidays = append(holidays, generator(10)...)
 	}
-
+	sort.Sort(ByDate(holidays))
 	json, _ := json.Marshal(holidays)
 	w.Write(json)
 }
