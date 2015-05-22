@@ -18,7 +18,17 @@ func main() {
 }
 
 func render(w http.ResponseWriter, req *http.Request) {
+	generators := []HolidayGenerator{
+		NewYearsDay,
+		MemorialDay,
+	}
 
-	json, _ := json.Marshal(MemorialDay(10))
+	var holidays []Holiday
+
+	for _, generator := range generators {
+		holidays = append(holidays, generator(10)...)
+	}
+
+	json, _ := json.Marshal(holidays)
 	w.Write(json)
 }

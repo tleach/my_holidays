@@ -6,25 +6,42 @@ import (
 
 const oneMonth = time.Duration(24) * time.Hour
 
-type HolidayInstance struct {
+type Holiday struct {
 	Description string
 	Date        time.Time
 	Code        string
 }
 
-type HolidayGenerator func(num int) []HolidayInstance
+type HolidayGenerator func(num int) []Holiday
 
-func MemorialDay(num int) []HolidayInstance {
+func NewYearsDay(num int) []Holiday {
+	var holidays []Holiday
+	d := BeginningOfYear(time.Now())
+	for len(holidays) < num {
+		holidays = append(
+			holidays,
+			Holiday{
+				"New Year's Day",
+				d,
+				"NEW",
+			},
+		)
+		d = NextYear(d)
+	}
+	return holidays
+}
+
+func MemorialDay(num int) []Holiday {
 	// Memorial Day falls on the last monday in May
 
-	var instances []HolidayInstance
-	d := BeginningOfMonth(time.Now().AddDate(-1, 0, 0))
+	var holidays []Holiday
+	d := BeginningOfMonth(PreviousYear(time.Now()))
 
-	for len(instances) < num {
+	for len(holidays) < num {
 		if d.Month() == time.May {
-			instances = append(
-				instances,
-				HolidayInstance{
+			holidays = append(
+				holidays,
+				Holiday{
 					"Memorial Day",
 					PreviousDayOfWeek(EndOfMonth(d), time.Monday),
 					"MEM",
@@ -35,5 +52,5 @@ func MemorialDay(num int) []HolidayInstance {
 			d = NextMonth(d)
 		}
 	}
-	return instances
+	return holidays
 }

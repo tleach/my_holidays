@@ -4,6 +4,14 @@ import (
 	"time"
 )
 
+func BeginningOfYear(t time.Time) time.Time {
+	return time.Date(t.Year(), 1, 1, 0, 0, 0, 0, t.Location())
+}
+
+func EndOfYear(t time.Time) time.Time {
+	return BeginningOfYear(t).AddDate(1, 0, 0).AddDate(0, 0, -1)
+}
+
 func BeginningOfMonth(t time.Time) time.Time {
 	return time.Date(t.Year(), t.Month(), 1, 0, 0, 0, 0, t.Location())
 }
