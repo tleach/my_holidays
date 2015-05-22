@@ -20,7 +20,10 @@ func main() {
 func render(w http.ResponseWriter, req *http.Request) {
 	generators := []HolidayGenerator{
 		NewYearsDay,
+		MartinLutherKingJuniorDay,
+		PresidentsDay,
 		MemorialDay,
+		IndependenceDay,
 	}
 
 	var holidays []Holiday

@@ -48,10 +48,42 @@ func PreviousMonth(t time.Time) time.Time {
 	return t.AddDate(0, -1, 0)
 }
 
+func NextDay(t time.Time) time.Time {
+	return t.AddDate(0, 0, 1)
+}
+
+func PreviousDay(t time.Time) time.Time {
+	return t.AddDate(0, 0, -1)
+}
+
+func NextMonthOfYear(t time.Time, m time.Month) time.Time {
+	diff := m - t.Month()
+	if diff < 0 {
+		diff = diff + 12
+	}
+	return BeginningOfMonth(t.AddDate(0, int(diff), 0))
+}
+
+func PreviousMonthOfYear(t time.Time, m time.Month) time.Time {
+	diff := m - t.Month()
+	if diff > 0 {
+		diff = diff - 12
+	}
+	return BeginningOfMonth(t.AddDate(0, int(diff), 0))
+}
+
 func NextYear(t time.Time) time.Time {
 	return t.AddDate(1, 0, 0)
 }
 
 func PreviousYear(t time.Time) time.Time {
 	return t.AddDate(-1, 0, 0)
+}
+
+func WeeksSince(t time.Time, weeks int) time.Time {
+	return t.AddDate(0, 0, 7*weeks)
+}
+
+func WeeksAgo(t time.Time, weeks int) time.Time {
+	return t.AddDate(0, 0, -7*weeks)
 }
