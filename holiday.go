@@ -32,7 +32,7 @@ func NewYearsDay(num int) []Holiday {
 	// Falls on the first day of the year
 
 	var holidays []Holiday
-	d := BeginningOfYear(time.Now())
+	d := BeginningOfYear(time.Now().UTC())
 	for len(holidays) < num {
 		holidays = append(
 			holidays,
@@ -51,7 +51,7 @@ func MemorialDay(num int) []Holiday {
 	// Memorial Day falls on the last monday in May
 
 	var holidays []Holiday
-	d := BeginningOfMonth(PreviousYear(time.Now()))
+	d := BeginningOfMonth(PreviousYear(time.Now().UTC()))
 
 	for len(holidays) < num {
 		if d.Month() == time.May {
@@ -74,7 +74,7 @@ func MemorialDay(num int) []Holiday {
 func LaborDay(num int) []Holiday {
 	// First monday in September
 	var holidays []Holiday
-	d := PreviousMonthOfYear(PreviousYear(time.Now()), time.September)
+	d := PreviousMonthOfYear(PreviousYear(time.Now().UTC()), time.September)
 
 	for len(holidays) < num {
 		holidays = append(
@@ -93,7 +93,7 @@ func LaborDay(num int) []Holiday {
 func ColumbusDay(num int) []Holiday {
 	// Second monday in October
 	var holidays []Holiday
-	d := PreviousMonthOfYear(PreviousYear(time.Now()), time.October)
+	d := PreviousMonthOfYear(PreviousYear(time.Now().UTC()), time.October)
 
 	for len(holidays) < num {
 		holidays = append(
@@ -112,7 +112,7 @@ func ColumbusDay(num int) []Holiday {
 func Thanksgiving(num int) []Holiday {
 	// Fourth Thursday in November
 	var holidays []Holiday
-	d := PreviousMonthOfYear(PreviousYear(time.Now()), time.November)
+	d := PreviousMonthOfYear(PreviousYear(time.Now().UTC()), time.November)
 
 	for len(holidays) < num {
 		holidays = append(
@@ -132,7 +132,7 @@ func MartinLutherKingJuniorDay(num int) []Holiday {
 	// Falls on the third monday of January
 
 	var holidays []Holiday
-	d := BeginningOfMonth(PreviousYear(time.Now()))
+	d := BeginningOfMonth(PreviousYear(time.Now().UTC()))
 
 	for len(holidays) < num {
 		if d.Month() == time.January {
@@ -156,7 +156,7 @@ func PresidentsDay(num int) []Holiday {
 	// Falls on the third monday of February
 
 	var holidays []Holiday
-	d := BeginningOfMonth(PreviousYear(time.Now()))
+	d := BeginningOfMonth(PreviousYear(time.Now().UTC()))
 
 	for len(holidays) < num {
 		if d.Month() == time.February {
@@ -180,7 +180,7 @@ func IndependenceDay(num int) []Holiday {
 	// July 4th. Public holiday on Friday if it falls on a Saturday,
 	// public holiday on the Monday if it falls on a Sunday
 	var holidays []Holiday
-	d := PreviousMonthOfYear(PreviousYear(time.Now()), time.July)
+	d := PreviousMonthOfYear(PreviousYear(time.Now().UTC()), time.July)
 	for len(holidays) < num {
 		july4th := d.AddDate(0, 0, 3)
 		if july4th.Weekday() == time.Saturday {
@@ -219,7 +219,7 @@ func VeteransDay(num int) []Holiday {
 	// November 11th. Public holiday on Friday if it falls on a Saturday,
 	// public holiday on the Monday if it falls on a Sunday
 	var holidays []Holiday
-	d := PreviousMonthOfYear(PreviousYear(time.Now()), time.November)
+	d := PreviousMonthOfYear(PreviousYear(time.Now().UTC()), time.November)
 	for len(holidays) < num {
 		november11th := d.AddDate(0, 0, 10)
 		if november11th.Weekday() == time.Saturday {
@@ -258,7 +258,7 @@ func ChristmasDay(num int) []Holiday {
 	// December 25th. Public holiday on Friday if it falls on a Saturday,
 	// public holiday on the Monday if it falls on a Sunday
 	var holidays []Holiday
-	d := PreviousMonthOfYear(PreviousYear(time.Now()), time.December)
+	d := PreviousMonthOfYear(PreviousYear(time.Now().UTC()), time.December)
 	for len(holidays) < num {
 		december25th := d.AddDate(0, 0, 24)
 		if december25th.Weekday() == time.Saturday {
