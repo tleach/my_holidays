@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Holidays</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            checkboxes = $("input[type=checkbox]")
+            checkboxes.change(function() {
+                var selectedHolidays = checkboxes.filter(':checked').map(function(index, element) {
+                    return $(element).val();
+                }).get();
+
+                $('input#webcalUrl').val("{{.BaseUrl}}/holidays.ics?include=" + selectedHolidays);
+            });
+        });
+    </script>
+    <div class="container">
+        <div class="page-header">
+            <h1>My Holidays</h1>
+        </div>
+        <p class="lead">My Holidays is a web service which serves up the dates of only the holidays you care about. Data is available either via an webcal feed or JSON. Simply select the holidays you care about below and use the generated URLs to get the dates into your app, iCal, Google Calendar, etc.</p>
+        <form>
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>Federal Holidays</h3>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="NEW">  New Year's Day
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="MLK">  Martin Luther King Junior Day
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h3>State Holidays</h3>
+
+                </div>
+                <div class="col-md-4">
+                    <h3>Other Holidays</h3>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="webcalUrl">Webcal URL</label>
+                <input type="text" class="form-control" id="webcalUrl">
+            </div>
+        </form>
+    </div>
+  </body>
+</html>

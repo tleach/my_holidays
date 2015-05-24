@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-martini/martini"
+	htmlTemplate "html/template"
 	"log"
 	"net/http"
 	"os"
@@ -15,7 +16,8 @@ import (
 
 func main() {
 	m := martini.Classic()
-	m.Get("/holidays.(?P<format>(json|ics))", render)
+	m.Get("/", serveHomepage)
+	m.Get("/holidays.(?P<format>(json|ics))", serveHolidays)
 	log.Printf("my_holidays listening on port 8027")
 	err := http.ListenAndServe(":8027", m)
 	if err != nil {
@@ -46,7 +48,21 @@ func renderJson(holidays []Holiday, w http.ResponseWriter) {
 	w.Write(json)
 }
 
-func render(w http.ResponseWriter, req *http.Request, params martini.Params) {
+func serveHomepage(w http.ResponseWriter, req *http.Request) {
+	tmpl, error := htmlTemplate.ParseFiles("./templates/index.html")
+	if error != nil {
+		fmt.Print(error)
+		return
+	}
+	data := struct {
+		BaseUrl string
+	}{
+		"https://" + req.Host,
+	}
+	tmpl.Execute(w, data)
+}
+
+func serveHolidays(w http.ResponseWriter, req *http.Request, params martini.Params) {
 	availableGenerators := map[string]HolidayGenerator{
 		"NEW": NewYearsDay,
 		"MEM": MemorialDay,
