@@ -15,11 +15,15 @@ import (
 )
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8027"
+	}
 	m := martini.Classic()
 	m.Get("/", serveHomepage)
 	m.Get("/holidays.(?P<format>(json|ics))", serveHolidays)
-	log.Printf("my_holidays listening on port 8027")
-	err := http.ListenAndServe(":8027", m)
+	log.Printf("my_holidays listening on port %v", port)
+	err := http.ListenAndServe(":"+port, m)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
