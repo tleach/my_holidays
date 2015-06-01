@@ -9,9 +9,9 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 	"text/template"
+	"time"
 )
 
 func main() {
@@ -39,7 +39,9 @@ func renderCal(holidays []Holiday, w http.ResponseWriter) {
 	}{
 		holidays,
 	}
-	tmpl.Execute(w, data)
+	if error := tmpl.Execute(w, data); error != nil {
+		fmt.Print(error)
+	}
 }
 
 func renderJson(holidays []Holiday, w http.ResponseWriter) {
@@ -55,44 +57,22 @@ func serveHomepage(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	data := struct {
-		BaseUrl string
+		BaseUrl    string
+		Generators []HolidayGenerator
 	}{
 		"https://" + req.Host,
+		AllGenerators(),
 	}
 	tmpl.Execute(w, data)
 }
 
 func serveHolidays(w http.ResponseWriter, req *http.Request, params martini.Params) {
-	availableGenerators := map[string]HolidayGenerator{
-		"NEW": NewYearsDay,
-		"MEM": MemorialDay,
-		"LAB": LaborDay,
-		"COL": ColumbusDay,
-		"TGV": Thanksgiving,
-		"MLK": MartinLutherKingJuniorDay,
-		"PRS": PresidentsDay,
-		"IND": IndependenceDay,
-		"VET": VeteransDay,
-		"CHR": ChristmasDay,
-	}
-
-	var generators []HolidayGenerator
+	generators := AllGenerators()
 	if include := req.URL.Query().Get("include"); include != "" {
-		for _, code := range strings.Split(include, ",") {
-			generators = append(generators, availableGenerators[code])
-		}
-	} else {
-		for _, v := range availableGenerators {
-			generators = append(generators, v)
-		}
+		generators = MatchCodes(generators, strings.Split(include, ","))
 	}
-
-	var holidays []Holiday
-
-	for _, generator := range generators {
-		holidays = append(holidays, generator(10)...)
-	}
-	sort.Sort(ByDate(holidays))
+	currentYear := time.Now().UTC().Year()
+	holidays := GenerateAll(generators, currentYear-5, currentYear+25)
 
 	if params["format"] == "ics" {
 		renderCal(holidays, w)

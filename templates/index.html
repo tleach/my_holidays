@@ -30,16 +30,13 @@
             <div class="row">
                 <div class="col-md-4">
                     <h3>Federal Holidays</h3>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="NEW">  New Year's Day
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="MLK">  Martin Luther King Junior Day
-                        </label>
-                    </div>
+                    {{range .Generators}}
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="{{.Code}}">{{.Name}}
+                            </label>
+                        </div>
+                        {{end}}
                 </div>
                 <div class="col-md-4">
                     <h3>State Holidays</h3>

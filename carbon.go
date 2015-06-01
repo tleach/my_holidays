@@ -88,6 +88,14 @@ func PreviousYear(t time.Time) time.Time {
 	return t.AddDate(-1, 0, 0)
 }
 
+func YearsSince(t time.Time, years int) time.Time {
+	return t.AddDate(years, 0, 0)
+}
+
+func YearsAgo(t time.Time, years int) time.Time {
+	return t.AddDate(-years, 0, 0)
+}
+
 func WeeksSince(t time.Time, weeks int) time.Time {
 	return t.AddDate(0, 0, 7*weeks)
 }

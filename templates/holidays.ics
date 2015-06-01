@@ -6,6 +6,11 @@ X-WR-CALNAME:Holidays
 {{range .Holidays}}BEGIN:VEVENT
 UID:com.tleach_holidays.{{.Code}}.{{.Date.Format "20060102"}}
 DTSTART:{{.Date.Format "20060102"}}
-SUMMARY:{{.Description}}
+SUMMARY:{{.Name}}
 END:VEVENT
-{{end}}END:VCALENDAR
+{{if not .IsObservedOnDate}}BEGIN:VEVENT
+UID:com.tleach_holidays.{{.Code}}.observed.{{.Date.Format "20060102"}}
+DTSTART:{{.ObservedDate.Format "20060102"}}
+SUMMARY:{{.Name}} observed
+END:VEVENT
+{{end}}{{end}}END:VCALENDAR
