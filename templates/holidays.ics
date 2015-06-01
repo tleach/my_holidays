@@ -2,7 +2,7 @@ BEGIN:VCALENDAR
 VERSION:2.0
 X-PUBLISHED-TTL:PT60M
 PRODID:-//com.tleach/NONSGML tleach_holidays//EN
-X-WR-CALNAME:Holidays
+X-WR-CALNAME:{{.Title}}
 {{range .Holidays}}BEGIN:VEVENT
 UID:com.tleach_holidays.{{.Code}}.{{.Date.Format "20060102"}}
 DTSTART:{{.Date.Format "20060102"}}

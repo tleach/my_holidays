@@ -25,35 +25,56 @@ func main() {
 	}
 }
 
-func renderCal(holidays []Holiday, w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "text/calendar")
-	w.Header().Set("Content-Disposition", "attachment; filename=\"holidays.ics\"")
+var _tmpl *template.Template
+
+func calTemplate() (*template.Template, error) {
 	cwd, _ := os.Getwd()
-	tmpl, error := template.ParseFiles(filepath.Join(cwd, "./templates/holidays.ics"))
-	if error != nil {
-		fmt.Print(error)
-		return
+	if _tmpl == nil {
+		fmt.Print("LOad")
+		var err error
+		_tmpl, err = template.ParseFiles(filepath.Join(cwd, "./templates/holidays.ics"))
+		if err != nil {
+			return nil, err
+		}
 	}
-	data := struct {
-		Holidays []Holiday
-	}{
-		holidays,
-	}
-	if error := tmpl.Execute(w, data); error != nil {
-		fmt.Print(error)
-	}
+	return _tmpl, nil
 }
 
-func renderJson(holidays []Holiday, w http.ResponseWriter) {
+func renderCal(title string, holidays []Holiday, w http.ResponseWriter) error {
+	tmpl, err := calTemplate()
+	if err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "text/calendar")
+	w.Header().Set("Content-Disposition", "attachment; filename=\"holidays.ics\"")
+	data := struct {
+		Title    string
+		Holidays []Holiday
+	}{
+		title,
+		holidays,
+	}
+	if err := tmpl.Execute(w, data); err != nil {
+		return err
+	}
+	return nil
+}
+
+func renderJson(title string, holidays []Holiday, w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
-	json, _ := json.Marshal(holidays)
+	json, err := json.Marshal(holidays)
+	if err != nil {
+		return err
+	}
 	w.Write(json)
+	return nil
 }
 
 func serveHomepage(w http.ResponseWriter, req *http.Request) {
 	tmpl, error := htmlTemplate.ParseFiles("./templates/index.html")
 	if error != nil {
 		fmt.Print(error)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	data := struct {
@@ -71,12 +92,21 @@ func serveHolidays(w http.ResponseWriter, req *http.Request, params martini.Para
 	if include := req.URL.Query().Get("include"); include != "" {
 		generators = MatchCodes(generators, strings.Split(include, ","))
 	}
+	title := req.URL.Query().Get("title")
+	if title == "" {
+		title = "My Holidays"
+	}
 	currentYear := time.Now().UTC().Year()
 	holidays := GenerateAll(generators, currentYear-5, currentYear+25)
 
+	var err error
 	if params["format"] == "ics" {
-		renderCal(holidays, w)
+		err = renderCal(title, holidays, w)
 	} else {
-		renderJson(holidays, w)
+		err = renderJson(title, holidays, w)
+	}
+	if err != nil {
+		fmt.Print(err)
+		w.WriteHeader(http.StatusInternalServerError)
 	}
 }

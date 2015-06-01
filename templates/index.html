@@ -11,22 +11,37 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function() {
-            checkboxes = $("input[type=checkbox]")
-            checkboxes.change(function() {
-                var selectedHolidays = checkboxes.filter(':checked').map(function(index, element) {
-                    return $(element).val();
+            var getSelectedHolidayCodes = function() {
+                return $("input[type=checkbox]:checked").map(function(i, el) {
+                    return $(el).val();
                 }).get();
+            };
 
-                $('input#webcalUrl').val("{{.BaseUrl}}/holidays.ics?include=" + selectedHolidays);
-            });
+            var regenerateUrl = function() {
+                var url = "{{.BaseUrl}}/holidays.ics";
+                var codes = getSelectedHolidayCodes();
+                var title = $("input#title").val();
+                var params = [];
+                if (codes.length) params.push("include=" + encodeURIComponent(codes));
+                if (title.length) params.push("title=" + encodeURIComponent(title));
+                if (params.length) url += "?" + params.join('&');
+                $('input#webcalUrl').val(url);
+            };
+
+            $("input[type=checkbox]").change(regenerateUrl);
+            $("input#title").keyup(regenerateUrl);
         });
     </script>
     <div class="container">
         <div class="page-header">
             <h1>My Holidays</h1>
         </div>
-        <p class="lead">My Holidays is a web service which serves up the dates of only the holidays you care about. Data is available either via an webcal feed or JSON. Simply select the holidays you care about below and use the generated URLs to get the dates into your app, iCal, Google Calendar, etc.</p>
+        <p class="lead">My Holidays is a free, open-source web service which serves up the dates of only the holidays you care about. Data is available either via a webcal feed or JSON. Simply select the holidays you care about below and use the generated URLs to get the dates into your app, iCal, Google Calendar, etc.</p>
         <form>
+            <div class="form-group">
+                <label for="calendarTitle">Calendar Title</label>
+                <input type="text" class="form-control" id="title" placeholder="My Holidays">
+            </div>
             <div class="row">
                 <div class="col-md-4">
                     <h3>Federal Holidays</h3>
