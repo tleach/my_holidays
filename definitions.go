@@ -104,9 +104,10 @@ var VeteransDay HolidayGenerator = HolidayGenerator{
 }
 
 var ChristmasDay HolidayGenerator = HolidayGenerator{
-	Name:        "Christmas Day",
-	Description: "The Twenty-Fifth of December",
-	Code:        "XMS",
+	Name:         "Christmas Day",
+	Description:  "The Twenty-Fifth of December",
+	Code:         "XMS",
+	ObservedDate: USObservationDate,
 	DateForYear: func(year int) time.Time {
 		return time.Date(year, time.December, 25, 0, 0, 0, 0, time.UTC)
 	},
