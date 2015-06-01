@@ -61,13 +61,13 @@ func serveHomepage(w http.ResponseWriter, req *http.Request) {
 		Generators []HolidayGenerator
 	}{
 		"https://" + req.Host,
-		AllGenerators(),
+		AllGenerators,
 	}
 	tmpl.Execute(w, data)
 }
 
 func serveHolidays(w http.ResponseWriter, req *http.Request, params martini.Params) {
-	generators := AllGenerators()
+	generators := AllGenerators
 	if include := req.URL.Query().Get("include"); include != "" {
 		generators = MatchCodes(generators, strings.Split(include, ","))
 	}
