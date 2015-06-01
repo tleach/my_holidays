@@ -81,7 +81,7 @@ func serveHomepage(w http.ResponseWriter, req *http.Request) {
 		BaseUrl    string
 		Generators []HolidayGenerator
 	}{
-		"https://" + req.Host,
+		"http://" + req.Host,
 		AllGenerators,
 	}
 	tmpl.Execute(w, data)
