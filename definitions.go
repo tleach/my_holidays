@@ -15,11 +15,30 @@ func USObservationDate(date time.Time) time.Time {
 
 var NewYearsDay HolidayGenerator = HolidayGenerator{
 	Name:         "New Year's Day",
-	Description:  "First day of the year",
+	Description:  "January 1st",
 	Code:         "NEW",
 	ObservedDate: USObservationDate,
 	DateForYear: func(year int) time.Time {
 		return time.Date(year, time.January, 1, 0, 0, 0, 0, time.UTC)
+	},
+}
+
+var MartinLutherKingJuniorDay HolidayGenerator = HolidayGenerator{
+	Name:        "Martin Luther King Jr. Day",
+	Description: "Third Monday in January",
+	Code:        "MLK",
+	DateForYear: func(year int) time.Time {
+		return WeeksSince(NextDayOfWeek(time.Date(year, time.January, 1, 0, 0, 0, 0, time.UTC), time.Monday), 2)
+	},
+}
+
+var PresidentsDay HolidayGenerator = HolidayGenerator{
+	Name:        "Presidents Day",
+	Description: "Third Monday of February",
+	Code:        "PRS",
+	DateForYear: func(year int) time.Time {
+		d := time.Date(year, time.February, 1, 0, 0, 0, 0, time.UTC)
+		return WeeksSince(NextDayOfWeek(d, time.Monday), 2)
 	},
 }
 
@@ -33,6 +52,16 @@ var MemorialDay HolidayGenerator = HolidayGenerator{
 				time.Date(year, time.May, 1, 0, 0, 0, 0, time.UTC),
 			),
 			time.Monday)
+	},
+}
+
+var IndependenceDay HolidayGenerator = HolidayGenerator{
+	Name:         "Independence Day",
+	Description:  "July 4th",
+	Code:         "IND",
+	ObservedDate: USObservationDate,
+	DateForYear: func(year int) time.Time {
+		return time.Date(year, time.July, 4, 0, 0, 0, 0, time.UTC)
 	},
 }
 
@@ -64,38 +93,9 @@ var Thanksgiving HolidayGenerator = HolidayGenerator{
 	},
 }
 
-var MartinLutherKingJuniorDay HolidayGenerator = HolidayGenerator{
-	Name:        "Martin Luther King Jr. Day",
-	Description: "Third Monday in January",
-	Code:        "MLK",
-	DateForYear: func(year int) time.Time {
-		return WeeksSince(NextDayOfWeek(time.Date(year, time.January, 1, 0, 0, 0, 0, time.UTC), time.Monday), 2)
-	},
-}
-
-var PresidentsDay HolidayGenerator = HolidayGenerator{
-	Name:        "Presidents Day",
-	Description: "Third Monday of February",
-	Code:        "PRS",
-	DateForYear: func(year int) time.Time {
-		d := time.Date(year, time.February, 1, 0, 0, 0, 0, time.UTC)
-		return WeeksSince(NextDayOfWeek(d, time.Monday), 2)
-	},
-}
-
-var IndependenceDay HolidayGenerator = HolidayGenerator{
-	Name:         "Independence Day",
-	Description:  "The Fourth of July",
-	Code:         "IND",
-	ObservedDate: USObservationDate,
-	DateForYear: func(year int) time.Time {
-		return time.Date(year, time.July, 4, 0, 0, 0, 0, time.UTC)
-	},
-}
-
 var VeteransDay HolidayGenerator = HolidayGenerator{
 	Name:         "Veterans Day",
-	Description:  "The Eleventh of November",
+	Description:  "November 11th",
 	Code:         "VET",
 	ObservedDate: USObservationDate,
 	DateForYear: func(year int) time.Time {
@@ -105,7 +105,7 @@ var VeteransDay HolidayGenerator = HolidayGenerator{
 
 var ChristmasDay HolidayGenerator = HolidayGenerator{
 	Name:         "Christmas Day",
-	Description:  "The Twenty-Fifth of December",
+	Description:  "December 25th",
 	Code:         "XMS",
 	ObservedDate: USObservationDate,
 	DateForYear: func(year int) time.Time {
@@ -114,7 +114,7 @@ var ChristmasDay HolidayGenerator = HolidayGenerator{
 }
 
 var AllGenerators []HolidayGenerator = []HolidayGenerator{
-	NewYearsDay, MemorialDay, LaborDay, ColumbusDay,
-	Thanksgiving, MartinLutherKingJuniorDay, PresidentsDay,
-	IndependenceDay, VeteransDay, ChristmasDay,
+	NewYearsDay, MartinLutherKingJuniorDay, PresidentsDay,
+	MemorialDay, IndependenceDay, LaborDay, ColumbusDay,
+	Thanksgiving, VeteransDay, ChristmasDay,
 }

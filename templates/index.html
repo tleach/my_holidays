@@ -48,7 +48,10 @@
                     {{range .Generators}}
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" value="{{.Code}}">{{.Name}}
+                                <input type="checkbox" value="{{.Code}}">
+                                <span data-toggle="tooltip" data-placement="right" title="{{.Description}}">
+                                    {{.Name}}
+                                </span>
                             </label>
                         </div>
                         {{end}}
