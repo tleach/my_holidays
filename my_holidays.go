@@ -82,11 +82,13 @@ func serveHomepage(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	data := struct {
-		BaseUrl    string
-		Generators []HolidayGenerator
+		BaseUrl           string
+		USFederalHolidays []HolidayGenerator
+		USOtherHolidays   []HolidayGenerator
 	}{
 		"http://" + req.Host,
-		AllGenerators,
+		USFederalHolidays,
+		USOtherHolidays,
 	}
 	tmpl.Execute(w, data)
 }

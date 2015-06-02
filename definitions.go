@@ -4,6 +4,12 @@ import (
 	"time"
 )
 
+// Calculates and returns the date on which the given holiday
+// date is actually observed. In the US, if a designated
+// holiday falls on a Saturday, then the preceding Friday is
+// taken as the "observed" holiday - a non-working day.
+// If the designated holiday falls on a Sunday, it is
+// observed on the following Monday.
 func USObservationDate(date time.Time) time.Time {
 	if date.Weekday() == time.Saturday {
 		return PreviousDay(date)
@@ -12,6 +18,8 @@ func USObservationDate(date time.Time) time.Time {
 	}
 	return date
 }
+
+// US FEDERAL HOLIDAYS
 
 var NewYearsDay HolidayGenerator = HolidayGenerator{
 	Name:         "New Year's Day",
@@ -113,8 +121,116 @@ var ChristmasDay HolidayGenerator = HolidayGenerator{
 	},
 }
 
-var AllGenerators []HolidayGenerator = []HolidayGenerator{
+// US Other Holidays
+
+var GroundhogDay HolidayGenerator = HolidayGenerator{
+	Name:        "Groundhog Day",
+	Description: "February 2nd",
+	Code:        "GHG",
+	DateForYear: func(year int) time.Time {
+		return time.Date(year, 2, 2, 0, 0, 0, 0, time.UTC)
+	},
+}
+
+var ValentinesDay HolidayGenerator = HolidayGenerator{
+	Name:        "Valentine's Day",
+	Description: "February 14th",
+	Code:        "VAL",
+	DateForYear: func(year int) time.Time {
+		return time.Date(year, 2, 14, 0, 0, 0, 0, time.UTC)
+	},
+}
+
+var EarthDay HolidayGenerator = HolidayGenerator{
+	Name:        "Earth Day",
+	Description: "April 22nd",
+	Code:        "EAR",
+	DateForYear: func(year int) time.Time {
+		return time.Date(year, 4, 22, 0, 0, 0, 0, time.UTC)
+	},
+}
+
+var ArborDay HolidayGenerator = HolidayGenerator{
+	Name:        "Arbor Day",
+	Description: "Last Friday in April",
+	Code:        "ARB",
+	DateForYear: func(year int) time.Time {
+		return PreviousDayOfWeek(
+			EndOfMonth(
+				time.Date(year, 4, 1, 0, 0, 0, 0, time.UTC)),
+			time.Friday)
+	},
+}
+
+var MothersDay HolidayGenerator = HolidayGenerator{
+	Name:        "Mothers Day",
+	Description: "Second Sunday in May",
+	Code:        "MOM",
+	DateForYear: func(year int) time.Time {
+		return NextWeek(
+			NextDayOfWeek(
+				time.Date(year, 5, 1, 0, 0, 0, 0, time.UTC), time.Sunday))
+	},
+}
+
+var FlagDay HolidayGenerator = HolidayGenerator{
+	Name:        "Flag Day",
+	Description: "June 14th",
+	Code:        "FLG",
+	DateForYear: func(year int) time.Time {
+		return time.Date(year, 6, 14, 0, 0, 0, 0, time.UTC)
+	},
+}
+
+var FathersDay HolidayGenerator = HolidayGenerator{
+	Name:        "Fathers Day",
+	Description: "Third Sunday in June",
+	Code:        "POP",
+	DateForYear: func(year int) time.Time {
+		return WeeksSince(
+			NextDayOfWeek(
+				time.Date(year, 5, 1, 0, 0, 0, 0, time.UTC),
+				time.Sunday),
+			2)
+	},
+}
+
+var PatriotDay HolidayGenerator = HolidayGenerator{
+	Name:        "Patriot Day",
+	Description: "September 11th",
+	Code:        "PAT",
+	DateForYear: func(year int) time.Time {
+		return time.Date(year, 9, 11, 0, 0, 0, 0, time.UTC)
+	},
+}
+
+var Halloween HolidayGenerator = HolidayGenerator{
+	Name:        "Halloween",
+	Description: "October 31st",
+	Code:        "HAL",
+	DateForYear: func(year int) time.Time {
+		return time.Date(year, 10, 31, 0, 0, 0, 0, time.UTC)
+	},
+}
+
+var PearlHarborDay HolidayGenerator = HolidayGenerator{
+	Name:        "Pearl Harbor Day",
+	Description: "December 7th",
+	Code:        "PHB",
+	DateForYear: func(year int) time.Time {
+		return time.Date(year, 12, 7, 0, 0, 0, 0, time.UTC)
+	},
+}
+
+var USFederalHolidays []HolidayGenerator = []HolidayGenerator{
 	NewYearsDay, MartinLutherKingJuniorDay, PresidentsDay,
 	MemorialDay, IndependenceDay, LaborDay, ColumbusDay,
 	Thanksgiving, VeteransDay, ChristmasDay,
 }
+
+var USOtherHolidays []HolidayGenerator = []HolidayGenerator{
+	GroundhogDay, ValentinesDay, EarthDay, ArborDay, MothersDay,
+	FlagDay, FathersDay, PatriotDay, Halloween, PearlHarborDay,
+}
+
+var AllGenerators []HolidayGenerator = append(USFederalHolidays, USOtherHolidays...)
